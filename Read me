@@ -1,0 +1,35 @@
+# AI-Powered SaaS Analytics Platform
+
+A multi-tenant analytics app: companies sign up, log KPI metrics, and
+generate AI-written executive summaries from their data using GPT-4.
+
+## Architecture
+- **Backend:** FastAPI + PostgreSQL, JWT auth, Row-Level Security for
+  tenant isolation, GPT-4o for summary generation.
+- **Frontend:** Next.js (App Router), plain fetch calls to the API.
+
+## How multi-tenancy works
+Every tenant-owned table (`users`, `metrics`, `ai_summaries`) has a
+`tenant_id` column and a Postgres Row-Level Security (RLS) policy. On
+every authenticated request, the backend sets a session variable
+(`app.current_tenant`) to the caller's tenant ID (decoded from their
+JWT). Postgres then transparently filters every query to that tenant
+— enforced at the database layer, not just app code.
+
+---
+
+## Full Installation Guide (from a clean machine)
+
+### Prerequisites to install first
+
+| Tool | Check if installed | Install if missing |
+|---|---|---|
+| Python 3.10+ | `python3 --version` | https://www.python.org/downloads/ |
+| Node.js 18+ | `node --version` | https://nodejs.org/ |
+| PostgreSQL 14+ | `psql --version` | https://www.postgresql.org/download/ |
+| Git | `git --version` | https://git-scm.com/downloads |
+
+On macOS with Homebrew, you can install everything with:
+```bash
+brew install python node postgresql
+brew services start postgresql
